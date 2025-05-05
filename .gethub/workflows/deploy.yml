@@ -1,0 +1,47 @@
+name: Deploy Node.js Backend to EC2
+
+on:
+  push:
+    branches:
+      - main  # Change to your branch name if different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # - name: Install dependencies
+      #   run: npm install
+
+      # - name: Build project (if needed)
+      #   run: npm run build
+        # Skip this if you don't have a build step
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST_BACKEND }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY_BACKEND }}
+          source: "."
+          target: "/home/ubuntu/SchoolBackend"
+          strip_components: 1
+
+      - name: Run App on EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST_BACKEND }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY_BACKEND }}
+          script: |
+            cd /home/ubuntu/SchoolBackend
+            npm install
+#            pm2 restart server || pm2 start server.js --name "school-backend"
