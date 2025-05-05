@@ -44,6 +44,5 @@ jobs:
           script: |
             cd /home/ubuntu/SchoolBackend
             npm install
-            pm2 restart server || pm2 start server.js --name "school-backend"
- #           sudo systemctl restart nginx
+            /usr/bin/pm2 restart school-backend || /usr/bin/pm2 start server.js --name school-backend
             
