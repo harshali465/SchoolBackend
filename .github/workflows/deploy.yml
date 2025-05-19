@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: Production
 
     steps:
       - name: Deploy React App using reusable action
@@ -20,9 +21,9 @@ jobs:
       - name: Upload Backend to EC2 and Run backed on EC2
         uses: harshali465/deploy-backend@v1         # same-repo path, or harshali465/deploy-backend@v1.0.0
         with:
-          host:       ${{ secrets.EC2_HOST_BACKEND }}
-          username:   ${{ secrets.EC2_USER_BACKEND }}
-          key:        ${{ secrets.EC2_SSH_KEY_BACKEND }}
+          host:       ${{ secrets.PROD_BACKEND_HOST }}
+          username:   ${{ secrets.PROD_BACKEND_USER }}
+          key:        ${{ secrets.PROD_BACKEND_KEY }}
           app-name:   ${{vars.APP_NAME}}
           target:     ${{vars.BASE_TARGET_PATH}}
       # - name: Checkout code
