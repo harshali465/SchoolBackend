@@ -10,39 +10,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Deploy React App using reusable action
+        uses: harshali465/my-setup-action@v1
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
         with:
-          node-version: '18'
+        
+          node-version: 18
 
-      # - name: Install dependencies
-      #   run: npm install
-
-      # - name: Build project (if needed)
-      #   run: npm run build
-        #Skip this if you don't have a build step
-
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/scp-action@v0.1.7
+      - name: Upload Backend to EC2 and Run backed on EC2
+        uses: harshali465/deploy-backend@v1         # same-repo path, or harshali465/deploy-backend@v1.0.0
         with:
-          host: ${{ secrets.EC2_HOST_BACKEND }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY_BACKEND }}
-          source: "."
-          target: "/home/ubuntu/SchoolBackend"
-          strip_components: 1
+          host:       ${{ secrets.EC2_HOST }}
+          username:   ${{ secrets.EC2_USER }}
+          key:        ${{ secrets.EC2_KEY }}
+          app-name:   ${{vars.APP-NAME}}
+          target:     ${{vars.BASE_TARGET_PATH}}
+      # - name: Checkout code
+      #   uses: actions/checkout@v3
 
-      - name: Run App on EC2
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST_BACKEND }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY_BACKEND }}
-          script: |
-            cd /home/ubuntu/SchoolBackend
-            npm install
-            /usr/bin/pm2 restart school-backend || /usr/bin/pm2 start server.js --name school-backend
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '18'
+
+      # # - name: Install dependencies
+      # #   run: npm install
+
+      # # - name: Build project (if needed)
+      # #   run: npm run build
+      #   #Skip this if you don't have a build step
+
+      # - name: Deploy to EC2 via SSH
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.EC2_HOST_BACKEND }}
+      #     username: ubuntu
+      #     key: ${{ secrets.EC2_SSH_KEY_BACKEND }}
+      #     source: "."
+      #     target: "/home/ubuntu/SchoolBackend"
+      #     strip_components: 1
+
+      # - name: Run App on EC2
+      #   uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     host: ${{ secrets.EC2_HOST_BACKEND }}
+      #     username: ubuntu
+      #     key: ${{ secrets.EC2_SSH_KEY_BACKEND }}
+      #     script: |
+      #       cd /home/ubuntu/SchoolBackend
+      #       npm install
+      #       /usr/bin/pm2 restart school-backend || /usr/bin/pm2 start server.js --name school-backend
             
