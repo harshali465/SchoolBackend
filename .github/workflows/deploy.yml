@@ -23,7 +23,7 @@ jobs:
           host:       ${{ secrets.EC2_HOST_BACKEND }}
           username:   ${{ secrets.EC2_USER_BACKEND }}
           key:        ${{ secrets.EC2_SSH_KEY_BACKEND }}
-          app-name:   ${{vars.APP-NAME}}
+          app-name:   ${{vars.APP_NAME}}
           target:     ${{vars.BASE_TARGET_PATH}}
       # - name: Checkout code
       #   uses: actions/checkout@v3
